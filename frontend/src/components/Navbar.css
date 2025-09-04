@@ -1,0 +1,381 @@
+/* Navbar Container */
+.navbar {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+/* Brand Section */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #2c3e50;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.brand-link:hover {
+  transform: translateY(-1px);
+}
+
+.college-logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  /* transition: all 0.3s ease; */
+}
+
+
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: #2c3e50;
+  text-shadow: none;
+  letter-spacing: -0.02em;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  margin: 0;
+  color: #64748b;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Menu */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-item {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  color: #4a5568;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  overflow: hidden;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.nav-links::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: all 0.5s ease;
+}
+
+.nav-links:hover::before {
+  left: 100%;
+}
+
+.nav-links:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+.nav-links:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+.student-signin-btn {
+  background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%) !important;
+  color: white !important;
+  border: none;
+  cursor: pointer;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2) !important;
+  border: 2px solid transparent !important;
+}
+
+.student-signin-btn:hover {
+  background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%) !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4) !important;
+}
+
+.student-signin-btn::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+}
+
+.admin-signin-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+  border: none;
+  cursor: pointer;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2) !important;
+  border: 2px solid transparent !important;
+}
+
+.admin-signin-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+.admin-signin-btn::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: white !important;
+  border: none;
+  cursor: pointer;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2) !important;
+  border: 2px solid transparent !important;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%) !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4) !important;
+}
+
+.logout-btn::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent) !important;
+}
+
+/* Loading and disabled states */
+.student-signin-btn:disabled,
+.admin-signin-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile Menu Button */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.hamburger:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background-color: #4a5568;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.hamburger .bar.active:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger .bar.active:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger .bar.active:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .college-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 80px;
+    flex-direction: column;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    width: 100%;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 2rem 0;
+    gap: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-menu.nav-menu-active {
+    left: 0;
+  }
+
+  .nav-item {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-links {
+    padding: 1rem 2rem;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(59, 130, 246, 0.05);
+    color: #4a5568;
+  }
+
+  .nav-links:hover {
+    background: rgba(59, 130, 246, 0.1);
+    transform: scale(1.05);
+    color: #3b82f6;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar {
+    height: 70px;
+  }
+
+  .navbar-container {
+    padding: 0 0.75rem;
+  }
+
+  .college-logo {
+    width: 45px;
+    height: 45px;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .nav-menu {
+    top: 70px;
+  }
+}
+
+/* Scroll Effect */
+@media (min-width: 769px) {
+  .navbar.scrolled {
+    height: 70px;
+    background: rgba(102, 126, 234, 0.95);
+    backdrop-filter: blur(20px);
+  }
+
+  .navbar.scrolled .college-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .navbar.scrolled .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .navbar.scrolled .brand-subtitle {
+    font-size: 0.7rem;
+  }
+}

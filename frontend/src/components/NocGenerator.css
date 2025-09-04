@@ -1,0 +1,74 @@
+.noc-generator-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.noc-generator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.noc-generator-header h2 {
+  color: #333;
+  margin: 0;
+}
+
+.close-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.close-button:hover {
+  background-color: #d32f2f;
+}
+
+.noc-form-fields label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #555;
+}
+
+.noc-form-fields input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.noc-form-fields input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.download-pdf-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.download-pdf-button:hover {
+  background-color: #218838;
+}

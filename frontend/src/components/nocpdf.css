@@ -1,0 +1,122 @@
+.noc-container {
+    width: 80%;
+    margin: auto;
+    font-family: Arial, sans-serif;
+    color: #000;
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .noc-header {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+.noc-header h2 {
+    margin-bottom: 5px;
+}
+
+.noc-header p {
+    margin: 2px 0;
+    font-size: 12px;
+}
+
+.noc-header h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+  
+  .college-logo {
+  width: 150px; /* Increased size */
+  height: auto;
+  margin-bottom: 10px;
+  display: block; /* Ensures margin: auto works for centering */
+  margin-left: auto;
+  margin-right: auto;
+}
+  
+  .noc-details p {
+    margin: 2px 0;
+    font-size: 14px;
+  }
+
+.noc-details {
+    margin-bottom: 20px;
+}
+
+  
+  .noc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .noc-table th,
+  .noc-table td {
+    border: 1px solid #000;
+    padding: 4px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+.noc-table th {
+    background-color: #f2f2f2;
+}
+
+.noc-table td p {
+    margin: 0;
+    padding: 0;
+}
+
+.noc-table td table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.noc-table td table td {
+    border: none;
+    padding: 0;
+}
+  
+  .accepted {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .note {
+    margin-top: 15px;
+    font-size: 13px;
+    font-style: italic;
+  }
+  
+  .noc-scholarship {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.noc-scholarship h4 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.noc-scholarship p {
+    margin: 2px 0;
+}
+  
+  .noc-signatures {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+    font-size: 14px;
+}
+
+.signature-block {
+    text-align: center;
+}
+
+.signature-block p {
+    margin: 0;
+    padding: 0;
+}
+  

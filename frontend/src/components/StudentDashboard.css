@@ -1,0 +1,644 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.student-dashboard-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: #1e293b;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+  padding-top: 120px;
+}
+
+/* Custom Scrollbar Styles */
+.student-dashboard-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.student-dashboard-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.student-dashboard-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.student-dashboard-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.student-dashboard-content {
+  z-index: 1;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.dashboard-header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+/* Enhanced form container with improved visual depth and animations */
+.form-container {
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 50%, rgba(241, 245, 249, 0.92) 100%);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 28px;
+  padding: 3.5rem;
+  width: 100%;
+  max-width: 750px;
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.08),
+    0 12px 40px rgba(59, 130, 246, 0.05),
+    0 6px 20px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+  backdrop-filter: blur(25px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+
+
+.form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg, 
+    rgba(59, 130, 246, 0.3) 0%, 
+    rgba(37, 99, 235, 0.5) 50%, 
+    rgba(59, 130, 246, 0.3) 100%
+  );
+  border-radius: 28px 28px 0 0;
+}
+
+
+
+/* Enhanced pattern overlay with more sophisticated gradients */
+.form-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.025) 0%, transparent 40%),
+    radial-gradient(circle at 60% 40%, rgba(168, 85, 247, 0.02) 0%, transparent 35%),
+    linear-gradient(135deg, rgba(59, 130, 246, 0.01) 0%, transparent 50%, rgba(168, 85, 247, 0.01) 100%);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 28px;
+}
+
+/* Ensure form content is above the overlay */
+.form-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+.form-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 30px 70px rgba(0, 0, 0, 0.1),
+    0 15px 40px rgba(59, 130, 246, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+.form-container h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #1e293b;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Status Display Styles */
+.status-container {
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  backdrop-filter: blur(5px);
+}
+
+.status-container h4 {
+  color: #1e293b;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.status-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.status-container li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  color: #64748b;
+  font-weight: 500;
+}
+
+.status-container li:last-child {
+  border-bottom: none;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+/* Enhanced form group styling with improved spacing and visual hierarchy */
+.form-group {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.875rem;
+  color: #374151;
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: 0.025em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  text-transform: capitalize;
+}
+
+
+
+/* Enhanced form container with better spacing */
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+
+
+/* Focus states */
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    0 4px 12px rgba(59, 130, 246, 0.15);
+  background: rgba(255, 255, 255, 0.98);
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+/* Special focus effect for select dropdown */
+.form-group select:focus {
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none"><path d="M3 5L6 8L9 5" stroke="%233b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-color: rgba(255, 255, 255, 1);
+}
+
+/* Enhanced gradient border animation with improved visual hierarchy */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group select,
+.form-group textarea {
+  position: relative;
+  background: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.95)) padding-box,
+    linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.1), rgba(168, 85, 247, 0.1)) border-box;
+  border: 2px solid transparent;
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-group input[type="text"]:hover,
+.form-group input[type="email"]:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  background: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(248, 250, 252, 0.98)) padding-box,
+    linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(37, 99, 235, 0.2), rgba(168, 85, 247, 0.15)) border-box;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(59, 130, 246, 0.08);
+  border-color: transparent;
+}
+
+/* Enhanced form input base styling with improved typography */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 1.25rem 1.75rem;
+  border: 2px solid rgba(226, 232, 240, 0.6);
+  border-radius: 16px;
+  font-size: 1rem;
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.95);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  letter-spacing: 0.025em;
+  line-height: 1.5;
+}
+
+/* Select dropdown styling with custom arrow */
+.form-group select {
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none"><path d="M3 5L6 8L9 5" stroke="%23374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  background-size: 16px;
+  padding-right: 3.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(226, 232, 240, 0.6);
+  transition: border-color 0.3s ease;
+}
+
+.form-group select:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  background-color: rgba(255, 255, 255, 0.98);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+/* Select option styling */
+.form-group select option {
+  padding: 0.875rem 1rem;
+  background: white;
+  color: #1e293b;
+  font-weight: 500;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.form-group select option:first-child {
+  color: #6b7280;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+/* Button Styles */
+/* Enhanced submit button with more sophisticated styling */
+.submit-button {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #1d4ed8 100%);
+  color: white;
+  padding: 1.5rem 3rem;
+  border: none;
+  border-radius: 20px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 12px 30px rgba(59, 130, 246, 0.3), 
+    0 6px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  width: 100%;
+  margin-top: 2rem;
+  font-family: inherit;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+
+
+/* Button hover effect */
+.submit-button:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 15px 30px rgba(59, 130, 246, 0.3), 
+    0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+  transition: all 0.1s ease;
+}
+
+.submit-button:focus {
+  outline: none;
+  box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4), 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.submit-button:disabled {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0.6;
+}
+
+.submit-button:disabled:hover {
+  transform: none;
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+}
+
+/* Enhanced text rendering for better readability */
+.submit-button {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide logout buttons from main screens */
+.form-container .logout-button {
+  display: none;
+}
+
+/* Only show logout button in the final success state */
+.form-container:last-child .logout-button {
+  display: block;
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.2);
+  width: 100%;
+  margin-top: 1.5rem;
+  font-family: inherit;
+}
+
+.form-container:last-child .logout-button:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(220, 38, 38, 0.25);
+}
+
+/* Success Message Styles */
+.success-message {
+  text-align: center;
+  color: #065f46;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  margin: 1rem 0;
+}
+
+/* Status Message Styles */
+.status-message {
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.status-pending {
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #92400e;
+}
+
+.status-rejected {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #991b1b;
+}
+
+.status-accepted {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #065f46;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  font-size: 1.1rem;
+  color: #64748b;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .student-dashboard-container {
+    padding: 1.5rem 1rem;
+    padding-top: 100px;
+  }
+  
+  .student-dashboard-content {
+    max-width: 95%;
+    padding: 2rem;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .student-dashboard-container {
+    padding: 1rem 0.5rem;
+    padding-top: 90px;
+  }
+  
+  .student-dashboard-content {
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 0;
+    max-width: 100%;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .form-container {
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 1rem 0;
+  }
+  
+  .form-container h2 {
+    font-size: 2rem;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group textarea {
+    padding: 0.875rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .submit-button {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .student-dashboard-container {
+    padding: 0.75rem 0.25rem;
+    padding-top: 80px;
+  }
+  
+  .student-dashboard-content {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .dashboard-header h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+  
+  .form-container {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .form-container h2 {
+    font-size: 1.75rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group textarea {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .form-container h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-container {
+    padding: 0.875rem;
+  }
+}
+
+/* Utility classes for mobile */
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  .mobile-padding {
+    padding: 1rem !important;
+  }
+}
