@@ -20,7 +20,7 @@ if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert({
         type: "service_account",
-        project_id: process.env.FIREBASE_PROJECT_ID || "sritwnoc",
+        project_id: process.env.FIREBASE_PROJECT_ID,
         private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
         private_key: privateKey,
         client_email: process.env.FIREBASE_CLIENT_EMAIL,
@@ -28,10 +28,10 @@ if (!admin.apps.length) {
         auth_uri: "https://accounts.google.com/o/oauth2/auth",
         token_uri: "https://oauth2.googleapis.com/token",
         auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-        client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`,
+        client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
         universe_domain: "googleapis.com"
       }),
-      projectId: process.env.FIREBASE_PROJECT_ID || "sritwnoc"
+      projectId: process.env.FIREBASE_PROJECT_ID
     });
     console.log('Firebase Admin initialized for Vercel');
   } catch (error) {
@@ -66,8 +66,25 @@ app.post("/send-email", async (req, res) => {
     const emailsFailed = [];
     
     // TESTING MODE: During development, send to verified email only
-    const testingMode = true; // Set to true for testing, false for production
-    const verifiedEmail = process.env.VERIFIED_TEST_EMAIL || 'rudra@exoticaexperience.in'; // Your verified email
+    const testingMode = process.env.TESTING_MODE === 'true'; // Controlled by environment variable
+    const verifiedEmail = process.env.VERIFIED_TEST_EMAIL; // Your verified email
+    const backendUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.BACKEND_URL;
+    
+    // Validate required environment variables
+    if (testingMode && !verifiedEmail) {
+      return res.status(500).json({ 
+        success: false, 
+        message: "Testing mode enabled but VERIFIED_TEST_EMAIL not set" 
+      });
+    }
+    
+    if (!backendUrl) {
+      return res.status(500).json({ 
+        success: false, 
+        message: "BACKEND_URL not set in environment variables" 
+      });
+    }
+    
     // Loop through each selected faculty email
     for (let facultyEmail of facultyEmails) {
       try {
@@ -108,8 +125,8 @@ app.post("/send-email", async (req, res) => {
               <div class="info-row"><span><strong>Email:</strong></span><span>${email}</span></div>
             </div>
             <div class="buttons">
-              <a href="${process.env.VERCEL_URL || 'https://your-backend-url.vercel.app'}/api/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
-              <a href="${process.env.VERCEL_URL || 'https://your-backend-url.vercel.app'}/api/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
+              <a href="${backendUrl}/api/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
+              <a href="${backendUrl}/api/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
             </div>
             <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
           </div>
@@ -117,9 +134,14 @@ app.post("/send-email", async (req, res) => {
         </html>
       `;
 
+        const fromEmail = process.env.FROM_EMAIL_RESEND;
+        if (!fromEmail) {
+          throw new Error("FROM_EMAIL_RESEND not set in environment variables");
+        }
+
         await resend.emails.send({
-          from: `NOC System <${process.env.FROM_EMAIL_RESEND || 'noc@resend.dev'}>`,
-          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL_RESEND || 'rudra@exoticaexperience.in',
+          from: `NOC System <${fromEmail}>`,
+          replyTo: process.env.REPLY_TO_EMAIL || fromEmail,
           to: [recipientEmail],
           subject: `NOC Approval Request - ${studentName} (${rollNo}) ${testingMode ? '[TESTING - Faculty: ' + facultyEmail + ']' : ''}`,
           html: emailHtml,
@@ -173,7 +195,7 @@ app.post("/send-email", async (req, res) => {
           verifiedEmail: testingMode ? verifiedEmail : null,
           instructions: testingMode ? 
             "All faculty emails are being sent to your verified email address for testing" :
-            "Emails are being sent to real faculty addresses using noc@resend.dev"
+            "Emails are being sent to real faculty addresses using your configured email"
         }
       });
     } else {

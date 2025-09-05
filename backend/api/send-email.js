@@ -8,7 +8,7 @@ if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
       type: "service_account",
-      project_id: process.env.FIREBASE_PROJECT_ID || "sritwnoc",
+      project_id: process.env.FIREBASE_PROJECT_ID,
       private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
       private_key: privateKey,
       client_email: process.env.FIREBASE_CLIENT_EMAIL,
@@ -16,17 +16,17 @@ if (!admin.apps.length) {
       auth_uri: "https://accounts.google.com/o/oauth2/auth",
       token_uri: "https://oauth2.googleapis.com/token",
       auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-      client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`,
+      client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
       universe_domain: "googleapis.com"
     }),
-    projectId: process.env.FIREBASE_PROJECT_ID || "sritwnoc"
+    projectId: process.env.FIREBASE_PROJECT_ID
   });
 }
 
 // Initialize Nodemailer with GoDaddy SMTP
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: 465,
+  port: parseInt(process.env.SMTP_PORT) || 465,
   secure: true, // true for 465, false for other ports
   auth: {
     user: process.env.SMTP_USER,
@@ -73,7 +73,14 @@ export default async function handler(req, res) {
     const emailsSent = [];
     const emailsFailed = [];
     
-    const backendUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://your-backend-url.vercel.app';
+    const backendUrl = process.env.BACKEND_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null;
+    
+    if (!backendUrl) {
+      return res.status(500).json({ 
+        success: false, 
+        message: "BACKEND_URL not set in environment variables" 
+      });
+    }
     
     // Loop through each selected faculty email
     for (let facultyEmail of facultyEmails) {
@@ -120,7 +127,7 @@ export default async function handler(req, res) {
             </div>
             <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888;">
-              <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})</p>
+              <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL})</p>
               <p><strong>System:</strong> NOC Management System</p>
             </div>
           </div>
@@ -128,11 +135,17 @@ export default async function handler(req, res) {
         </html>
       `;
 
+        // Validate required environment variables
+        const fromEmail = process.env.FROM_EMAIL;
+        if (!fromEmail) {
+          throw new Error("FROM_EMAIL not set in environment variables");
+        }
+
         // Send email using nodemailer
         const mailOptions = {
-          from: `"NOC System" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
+          from: `"NOC System" <${fromEmail}>`,
           to: facultyEmail,
-          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
+          replyTo: process.env.REPLY_TO_EMAIL || fromEmail,
           subject: `NOC Approval Request - ${studentName} (${rollNo})`,
           html: emailHtml
         };
@@ -157,8 +170,8 @@ export default async function handler(req, res) {
           sent: emailsSent,
           failed: emailsFailed,
           total: facultyEmails.length,
-          smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
-          fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
+          smtpServer: process.env.SMTP_HOST,
+          fromEmail: process.env.FROM_EMAIL
         }
       });
     } else {
