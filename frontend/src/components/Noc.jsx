@@ -128,7 +128,7 @@ export default function Noc() {
       
       setLoading(true);
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
         const response = await axios.post(`${apiUrl}/resend-to-rejected`, {
           rollNo: exportedRollNo,
           resendMessage: resendMessage
@@ -156,7 +156,7 @@ export default function Noc() {
       setLoading(true);
       try {
         // Use environment variable for API URL
-        const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
         const response = await axios.post(`${apiUrl}/send-email`, {
           studentName: exportedStudentName,
           rollNo: exportedRollNo,
