@@ -3,8 +3,30 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
 const admin = require("firebase-admin");
-const serviceAccount = require("./serviceAccountKey.json");
 require('dotenv').config();
+
+// Initialize Firebase Admin using environment variable
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } catch (error) {
+    console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT:', error);
+    console.error('Please ensure FIREBASE_SERVICE_ACCOUNT is a valid JSON string');
+    process.exit(1);
+  }
+} else {
+  console.warn('⚠️ FIREBASE_SERVICE_ACCOUNT not found in environment variables');
+  console.warn('Attempting to load from serviceAccountKey.json file...');
+  try {
+    serviceAccount = require("./serviceAccountKey.json");
+    console.log('✅ Loaded service account from file');
+  } catch (error) {
+    console.error('❌ Failed to load service account from file:', error);
+    console.error('Please set FIREBASE_SERVICE_ACCOUNT environment variable with your service account JSON');
+    process.exit(1);
+  }
+}
 
 // Initialize Nodemailer with GoDaddy SMTP
 const transporter = nodemailer.createTransport({
@@ -36,10 +58,17 @@ if (!process.env.SMTP_PASS) {
   console.warn('⚠️  WARNING: SMTP_PASS seems too short, please verify it is correct');
 }
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.DATABASE_URL || "https://sritwnoc-default-rtdb.firebaseio.com"
-});
+// Initialize Firebase Admin
+try {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: process.env.DATABASE_URL || "https://sritwnoc-default-rtdb.firebaseio.com"
+  });
+  console.log('✅ Firebase Admin initialized successfully');
+} catch (error) {
+  console.error('❌ Firebase Admin initialization failed:', error);
+  process.exit(1);
+}
 
 const db = admin.firestore();
 

@@ -39,19 +39,15 @@ SMTP_PASS=your_new_password
 # Server Configuration
 BACKEND_URL=https://your-backend-url.vercel.app
 FRONTEND_URL=https://your-frontend-url.vercel.app
+DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 
 # Email Configuration
 FROM_EMAIL=your_new_email@yourdomain.com
 REPLY_TO_EMAIL=your_new_email@yourdomain.com
 VERIFIED_TEST_EMAIL=your_verified_email@yourdomain.com
 
-# Firebase Configuration (new service account key)
-FIREBASE_PROJECT_ID=your_project_id
-FIREBASE_PRIVATE_KEY_ID=your_new_private_key_id
-FIREBASE_PRIVATE_KEY=your_new_private_key
-FIREBASE_CLIENT_EMAIL=your_client_email@project_id.iam.gserviceaccount.com
-FIREBASE_CLIENT_ID=your_client_id
-FIREBASE_CLIENT_X509_CERT_URL=your_cert_url
+# Firebase Service Account (JSON string)
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"your_project_id","private_key_id":"your_new_private_key_id","private_key":"-----BEGIN PRIVATE KEY-----\nYOUR_NEW_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n","client_email":"your_client_email@your_project_id.iam.gserviceaccount.com","client_id":"your_client_id","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/your_client_email"}
 
 # Resend Configuration (if used)
 RESEND_API_KEY=your_new_resend_api_key
@@ -59,9 +55,6 @@ FROM_EMAIL_RESEND=your_new_email@yourdomain.com
 
 # Testing Configuration
 TESTING_MODE=false
-
-# Database URL
-DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
 ```
 
 ### 3. Frontend Environment Variables
