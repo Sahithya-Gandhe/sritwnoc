@@ -8,18 +8,37 @@ require('dotenv').config();
 
 // Initialize Nodemailer with GoDaddy SMTP
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: 465,
+  host: process.env.SMTP_HOST || 'smtpout.secureserver.net',
+  port: parseInt(process.env.SMTP_PORT) || 465,
   secure: true, // true for 465, false for other ports
   auth: {
-    user: process.env.SMTP_USER,
+    user: process.env.SMTP_USER || 'rudra@exoticaexperience.in',
     pass: process.env.SMTP_PASS
+  },
+  // Additional GoDaddy specific settings
+  tls: {
+    ciphers: 'SSLv3',
+    rejectUnauthorized: false
   }
 });
 
+// Log SMTP configuration (without password)
+console.log('📧 SMTP Configuration:');
+console.log(`  Host: ${process.env.SMTP_HOST || 'smtpout.secureserver.net'}`);
+console.log(`  Port: ${process.env.SMTP_PORT || 465}`);
+console.log(`  User: ${process.env.SMTP_USER || 'rudra@exoticaexperience.in'}`);
+console.log(`  Password: ${process.env.SMTP_PASS ? '[SET - LENGTH: ' + process.env.SMTP_PASS.length + ']' : '[NOT SET - PLEASE UPDATE .env FILE]'}`);
+
+// Verify environment variables are loaded
+if (!process.env.SMTP_PASS) {
+  console.error('❌ CRITICAL: SMTP_PASS not found in environment variables!');
+} else if (process.env.SMTP_PASS.length < 5) {
+  console.warn('⚠️  WARNING: SMTP_PASS seems too short, please verify it is correct');
+}
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://sritwnoc-default-rtdb.firebaseio.com"
+  databaseURL: process.env.DATABASE_URL || "https://sritwnoc-default-rtdb.firebaseio.com"
 });
 
 const db = admin.firestore();
@@ -45,9 +64,16 @@ app.post("/send-email", async (req, res) => {
     console.log('✅ SMTP server connection verified');
   } catch (error) {
     console.error('❌ SMTP server connection failed:', error);
+    // More detailed error response
     return res.status(500).json({ 
       success: false, 
-      message: "Email service configuration error. SMTP connection failed." 
+      message: "Email service configuration error. SMTP connection failed.",
+      error: error.message,
+      details: {
+        code: error.code,
+        response: error.response,
+        command: error.command
+      }
     });
   }
 
@@ -95,12 +121,12 @@ app.post("/send-email", async (req, res) => {
                 <div class="info-row"><span><strong>Email:</strong></span><span>${email}</span></div>
               </div>
               <div class="buttons">
-                <a href="http://localhost:5000/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
-                <a href="http://localhost:5000/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
               </div>
               <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
               <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888;">
-                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: rudra@exoticaexperience.in)</p>
+                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})</p>
                 <p><strong>System:</strong> NOC Management System</p>
               </div>
             </div>
@@ -110,9 +136,9 @@ app.post("/send-email", async (req, res) => {
 
         // Send email using nodemailer
         const mailOptions = {
-          from: '"NOC System" <rudra@exoticaexperience.in>',
+          from: `"NOC System" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
           to: facultyEmail,
-          replyTo: 'rudra@exoticaexperience.in',
+          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
           subject: `NOC Approval Request - ${studentName} (${rollNo})`,
           html: emailHtml
         };
@@ -141,8 +167,8 @@ app.post("/send-email", async (req, res) => {
           sent: emailsSent,
           failed: emailsFailed,
           total: facultyEmails.length,
-          smtpServer: 'smtpout.secureserver.net (GoDaddy)',
-          fromEmail: 'rudra@exoticaexperience.in'
+          smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
+          fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
         }
       });
     } else {
@@ -506,14 +532,14 @@ app.post("/resend-to-rejected", async (req, res) => {
               </div>
               
               <div class="buttons">
-                <a href="http://localhost:5000/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
-                <a href="http://localhost:5000/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/noc-request/accept?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-accept">✅ Accept</a>
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:5000'}/noc-request/reject?rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}" class="btn btn-reject">❌ Reject</a>
               </div>
               
               <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
               
               <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888;">
-                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: rudra@exoticaexperience.in)</p>
+                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})</p>
                 <p><strong>System:</strong> NOC Management System</p>
               </div>
             </div>
@@ -522,9 +548,9 @@ app.post("/resend-to-rejected", async (req, res) => {
         `;
 
         const mailOptions = {
-          from: '"NOC System (RESEND)" <rudra@exoticaexperience.in>',
+          from: `"NOC System (RESEND)" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
           to: facultyEmail,
-          replyTo: 'rudra@exoticaexperience.in',
+          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
           subject: `NOC Approval Request (RESEND) - ${data.studentName} (${rollNo})`,
           html: emailHtml
         };
@@ -561,8 +587,8 @@ app.post("/resend-to-rejected", async (req, res) => {
           failed: emailsFailed,
           total: rejectedFacultyEmails.length,
           resendCount: (data.resendCount || 0) + 1,
-          smtpServer: 'smtpout.secureserver.net (GoDaddy)',
-          fromEmail: 'rudra@exoticaexperience.in'
+          smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
+          fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
         }
       });
     } else {
@@ -605,17 +631,17 @@ app.post("/test-email", async (req, res) => {
     console.log('✅ SMTP server connection verified');
     
     const mailOptions = {
-      from: '"NOC System Test" <rudra@exoticaexperience.in>',
+      from: `"NOC System Test" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
       to: testEmail,
-      replyTo: 'rudra@exoticaexperience.in',
+      replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
       subject: 'NOC System - Email Configuration Test',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #28a745;">✅ Email Configuration Test Successful!</h2>
           <p>This is a test email to verify that the NOC System email configuration is working properly.</p>
           <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>SMTP Server:</strong> smtpout.secureserver.net (GoDaddy)</p>
-            <p><strong>From Email:</strong> rudra@exoticaexperience.in</p>
+            <p><strong>SMTP Server:</strong> ${process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)'}</p>
+            <p><strong>From Email:</strong> ${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}</p>
             <p><strong>Test Email:</strong> ${testEmail}</p>
             <p><strong>Test Time:</strong> ${new Date().toLocaleString()}</p>
           </div>
@@ -633,8 +659,8 @@ app.post("/test-email", async (req, res) => {
       details: {
         testEmail: testEmail,
         messageId: result.messageId,
-        smtpServer: 'smtpout.secureserver.net (GoDaddy)',
-        fromEmail: 'rudra@exoticaexperience.in'
+        smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
+        fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
       }
     });
     
@@ -742,7 +768,7 @@ setTimeout(() => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Email service: NodeMailer with GoDaddy SMTP (rudra@exoticaexperience.in)`);
+  console.log(`Email service: NodeMailer with GoDaddy SMTP (${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})`);
   console.log(`Test email endpoint: POST /test-email`);
   console.log(`🔄 Auto-rejection service: Checking every hour for requests older than 24h`);
   console.log(`New endpoints added:`);

@@ -67,7 +67,7 @@ app.post("/send-email", async (req, res) => {
     
     // TESTING MODE: During development, send to verified email only
     const testingMode = true; // Set to true for testing, false for production
-    const verifiedEmail = 'dathaking17@gmail.com'; // Your verified email
+    const verifiedEmail = process.env.VERIFIED_TEST_EMAIL || 'rudra@exoticaexperience.in'; // Your verified email
     // Loop through each selected faculty email
     for (let facultyEmail of facultyEmails) {
       try {
@@ -118,8 +118,8 @@ app.post("/send-email", async (req, res) => {
       `;
 
         await resend.emails.send({
-          from: 'NOC System <noc@resend.dev>',
-          replyTo: 'dathaking17@gmail.com',
+          from: `NOC System <${process.env.FROM_EMAIL_RESEND || 'noc@resend.dev'}>`,
+          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL_RESEND || 'rudra@exoticaexperience.in',
           to: [recipientEmail],
           subject: `NOC Approval Request - ${studentName} (${rollNo}) ${testingMode ? '[TESTING - Faculty: ' + facultyEmail + ']' : ''}`,
           html: emailHtml,

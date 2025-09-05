@@ -2,7 +2,7 @@ import React from "react";
 import "./NocPdf.css";
 import logo from "../assets/logo3.png";
 
-const NocPdf = React.forwardRef(({ studentName, rollNo, branch }, ref) => {
+const NocPdf = React.forwardRef(({ studentName, rollNo, branch, year }, ref) => {
   return (
     <div className="noc-container" ref={ref}>
       {/* Logo Placeholder */}
@@ -20,7 +20,7 @@ const NocPdf = React.forwardRef(({ studentName, rollNo, branch }, ref) => {
         <p>Time: {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}</p>
         <p>
           Certified that Ms. <b>{studentName}</b>, H.T No: 
-          <b>{rollNo}</b>, B.Tech <b>{branch}</b> has 
+          <b>{rollNo}</b>, B.Tech <b>{branch}</b>, Year: <b>{year}</b> has 
           <b>"NO DUES"</b> to the college.
         </p>
         <p>

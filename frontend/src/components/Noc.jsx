@@ -190,8 +190,40 @@ export default function Noc() {
         alert(response.data.message);
         setSelectedFaculties([]); // reset selections
       } catch (err) {
-        console.error(err);
-        alert("Error sending emails.");
+        console.error("Error sending emails:", err);
+        
+        // More detailed error handling
+        let errorMessage = "Error sending emails.";
+        
+        if (err.response) {
+          // Server responded with error status
+          console.error("Response data:", err.response.data);
+          console.error("Response status:", err.response.status);
+          
+          if (err.response.data && err.response.data.message) {
+            errorMessage = err.response.data.message;
+            
+            // Add specific error details if available
+            if (err.response.data.error) {
+              errorMessage += "\n\nDetails: " + err.response.data.error;
+              
+              // If it's an authentication error, suggest checking credentials
+              if (err.response.data.error.includes("Authentication Failed")) {
+                errorMessage += "\n\nPlease check your SMTP credentials in the .env file.";
+              }
+            }
+          } else {
+            errorMessage = `Server error (${err.response.status}): ${err.response.statusText}`;
+          }
+        } else if (err.request) {
+          // Request was made but no response received
+          errorMessage = "No response from server. Please check if the backend is running.";
+        } else {
+          // Something else happened
+          errorMessage = "Error: " + err.message;
+        }
+        
+        alert(errorMessage);
       } finally {
         setLoading(false);
       }

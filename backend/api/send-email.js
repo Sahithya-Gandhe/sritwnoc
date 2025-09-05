@@ -120,7 +120,7 @@ export default async function handler(req, res) {
             </div>
             <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888;">
-              <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: rudra@exoticaexperience.in)</p>
+              <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})</p>
               <p><strong>System:</strong> NOC Management System</p>
             </div>
           </div>
@@ -130,9 +130,9 @@ export default async function handler(req, res) {
 
         // Send email using nodemailer
         const mailOptions = {
-          from: '"NOC System" <rudra@exoticaexperience.in>',
+          from: `"NOC System" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
           to: facultyEmail,
-          replyTo: 'rudra@exoticaexperience.in',
+          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
           subject: `NOC Approval Request - ${studentName} (${rollNo})`,
           html: emailHtml
         };
@@ -157,8 +157,8 @@ export default async function handler(req, res) {
           sent: emailsSent,
           failed: emailsFailed,
           total: facultyEmails.length,
-          smtpServer: 'smtpout.secureserver.net (GoDaddy)',
-          fromEmail: 'rudra@exoticaexperience.in'
+          smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
+          fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
         }
       });
     } else {
@@ -387,7 +387,7 @@ export async function resendToRejected(req, res) {
               <p style="text-align: center; color: #666; font-size: 14px;">Please click one of the buttons above to register your decision.</p>
               
               <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #888;">
-                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: rudra@exoticaexperience.in)</p>
+                <p><strong>Contact:</strong> For any queries, please reply to this email (replies go to: ${process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'})</p>
                 <p><strong>System:</strong> NOC Management System</p>
               </div>
             </div>
@@ -396,9 +396,9 @@ export async function resendToRejected(req, res) {
         `;
 
         const mailOptions = {
-          from: '"NOC System (RESEND)" <rudra@exoticaexperience.in>',
+          from: `"NOC System (RESEND)" <${process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'}>`,
           to: facultyEmail,
-          replyTo: 'rudra@exoticaexperience.in',
+          replyTo: process.env.REPLY_TO_EMAIL || process.env.FROM_EMAIL || 'rudra@exoticaexperience.in',
           subject: `NOC Approval Request (RESEND) - ${data.studentName} (${rollNo})`,
           html: emailHtml
         };
@@ -435,8 +435,8 @@ export async function resendToRejected(req, res) {
           failed: emailsFailed,
           total: rejectedFacultyEmails.length,
           resendCount: (data.resendCount || 0) + 1,
-          smtpServer: 'smtpout.secureserver.net (GoDaddy)',
-          fromEmail: 'rudra@exoticaexperience.in'
+          smtpServer: process.env.SMTP_HOST || 'smtpout.secureserver.net (GoDaddy)',
+          fromEmail: process.env.FROM_EMAIL || 'rudra@exoticaexperience.in'
         }
       });
     } else {
