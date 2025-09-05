@@ -1,5 +1,5 @@
 import React from "react";
-import "./NocPdf.css";
+import "./nocpdf.css";
 import logo from "../assets/logo3.png";
 
 const NocPdf = React.forwardRef(({ studentName, rollNo, branch, year }, ref) => {
