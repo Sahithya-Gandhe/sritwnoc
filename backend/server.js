@@ -224,12 +224,9 @@ app.get("/noc-request/accept", async (req, res) => {
   const { rollNo, facultyEmail } = req.query;
 
   if (!rollNo || !facultyEmail) {
-    return res.status(400).send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #dc3545;">❌ Error</h2>
-        <p>Missing required parameters.</p>
-      </body></html>
-    `);
+    // Redirect to frontend with error parameters
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=missing_params`;
+    return res.redirect(redirectUrl);
   }
 
   try {
@@ -237,12 +234,9 @@ app.get("/noc-request/accept", async (req, res) => {
     const doc = await nocRef.get();
 
     if (!doc.exists) {
-      return res.status(404).send(`
-        <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-          <h2 style="color: #dc3545;">❌ Not Found</h2>
-          <p>NOC request not found for Roll No: ${rollNo}</p>
-        </body></html>
-      `);
+      // Redirect to frontend with not found error
+      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=request_not_found&rollNo=${rollNo}`;
+      return res.redirect(redirectUrl);
     }
 
     const data = doc.data();
@@ -250,13 +244,9 @@ app.get("/noc-request/accept", async (req, res) => {
     
     // Check if already responded
     if (facultyStatuses[facultyEmail] && facultyStatuses[facultyEmail] !== "Pending") {
-      return res.send(`
-        <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-          <h2 style="color: #ffc107;">⚠️ Already Responded</h2>
-          <p>You have already responded to this NOC request.</p>
-          <p>Your response: <strong>${facultyStatuses[facultyEmail]}</strong></p>
-        </body></html>
-      `);
+      // Redirect to frontend with already responded message
+      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?message=already_responded&status=${facultyStatuses[facultyEmail]}&rollNo=${rollNo}`;
+      return res.redirect(redirectUrl);
     }
     
     facultyStatuses[facultyEmail] = "Accepted";
@@ -277,21 +267,14 @@ app.get("/noc-request/accept", async (req, res) => {
       console.log(`⏳ Waiting for ${totalFacultyRequired - acceptedCount} more faculty approvals.`);
     }
 
-    res.send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #28a745;">✅ Request Accepted</h2>
-        <p>NOC request for <strong>${data.studentName}</strong> (${rollNo}) has been accepted.</p>
-        <p>Thank you for your response!</p>
-      </body></html>
-    `);
+    // Redirect to frontend with success message
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?message=accepted&rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error("Error accepting NOC request:", error);
-    res.status(500).send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #dc3545;">❌ Server Error</h2>
-        <p>Error: ${error.message}</p>
-      </body></html>
-    `);
+    // Redirect to frontend with error message
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=server_error&message=${encodeURIComponent(error.message)}`;
+    res.redirect(redirectUrl);
   }
 });
 
@@ -300,12 +283,9 @@ app.get("/noc-request/reject", async (req, res) => {
   const { rollNo, facultyEmail } = req.query;
 
   if (!rollNo || !facultyEmail) {
-    return res.status(400).send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #dc3545;">❌ Error</h2>
-        <p>Missing required parameters.</p>
-      </body></html>
-    `);
+    // Redirect to frontend with error parameters
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=missing_params`;
+    return res.redirect(redirectUrl);
   }
 
   try {
@@ -313,12 +293,9 @@ app.get("/noc-request/reject", async (req, res) => {
     const doc = await nocRef.get();
 
     if (!doc.exists) {
-      return res.status(404).send(`
-        <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-          <h2 style="color: #dc3545;">❌ Not Found</h2>
-          <p>NOC request not found for Roll No: ${rollNo}</p>
-        </body></html>
-      `);
+      // Redirect to frontend with not found error
+      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=request_not_found&rollNo=${rollNo}`;
+      return res.redirect(redirectUrl);
     }
 
     const data = doc.data();
@@ -326,13 +303,9 @@ app.get("/noc-request/reject", async (req, res) => {
     
     // Check if already responded
     if (facultyStatuses[facultyEmail] && facultyStatuses[facultyEmail] !== "Pending") {
-      return res.send(`
-        <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-          <h2 style="color: #ffc107;">⚠️ Already Responded</h2>
-          <p>You have already responded to this NOC request.</p>
-          <p>Your response: <strong>${facultyStatuses[facultyEmail]}</strong></p>
-        </body></html>
-      `);
+      // Redirect to frontend with already responded message
+      const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?message=already_responded&status=${facultyStatuses[facultyEmail]}&rollNo=${rollNo}`;
+      return res.redirect(redirectUrl);
     }
     
     facultyStatuses[facultyEmail] = "Rejected";
@@ -375,21 +348,14 @@ app.get("/noc-request/reject", async (req, res) => {
       console.log(`⏳ Waiting for ${totalFacultyRequired - respondedCount} more faculty responses.`);
     }
 
-    res.send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #dc3545;">❌ Request Rejected</h2>
-        <p>NOC request for <strong>${data.studentName}</strong> (${rollNo}) has been rejected.</p>
-        <p>Thank you for your response!</p>
-      </body></html>
-    `);
+    // Redirect to frontend with rejection message
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?message=rejected&rollNo=${rollNo}&facultyEmail=${encodeURIComponent(facultyEmail)}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     console.error("Error rejecting NOC request:", error);
-    res.status(500).send(`
-      <html><body style="font-family: Arial; text-align: center; padding: 50px;">
-        <h2 style="color: #dc3545;">❌ Server Error</h2>
-        <p>Error: ${error.message}</p>
-      </body></html>
-    `);
+    // Redirect to frontend with error message
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5000'}?error=server_error&message=${encodeURIComponent(error.message)}`;
+    res.redirect(redirectUrl);
   }
 });
 
