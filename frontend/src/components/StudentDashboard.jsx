@@ -20,6 +20,7 @@ const StudentDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // loading state
+  const [showNocSection, setShowNocSection] = useState(false); // New state to control NOC section visibility
   const [rollNo, setRollNo] = useState('');
   const [studentName, setStudentName] = useState('');
   const [branch, setBranch] = useState('');
@@ -193,143 +194,163 @@ const StudentDashboard = () => {
       <div className="student-dashboard-content">
         <div className="dashboard-header">
           <h1>Welcome, {user.displayName || user.email}!</h1>
-          {/* <button onClick={handleLogout} className="logout-button">Logout</button> */}
         </div>
 
-        <div className="form-container">
-          <h2>NOC Request Form</h2>
-          {hasSentRequest && nocRequestStatus && nocRequestStatus.finalStatus !== "Accepted" ? (
-            <div>
-              <p>You have an active NOC request.</p>
-              <p><strong>Final Status:</strong> {nocRequestStatus.finalStatus}</p>
-              {nocRequestStatus.facultyStatuses && (
-                <div>
-                  <h4>Individual Faculty Statuses:</h4>
-                  <ul>
-                    {Object.entries(nocRequestStatus.facultyStatuses).map(([email, status]) => {
-                      const facultyRoleMap = {
-                        [exportedMentor]: "Mentor", // Add mentor mapping
-                        [examBranchEmail]: "Examination Branch",
-                        [libraryEmail]: "Library",
-                        [tnpEmail]: "Training & Placement Cell",
-                        [ieeeEmail]: "IEEE / ISTE / CSI",
-                        [sportsEmail]: "Sports / Games",
-                        [alumniEmail]: "Alumni Association",
-                      };
-                      const role = facultyRoleMap[email] || `Unknown Faculty (${email})`;
-                      return (
-                        <li key={email}>{role}: {status}</li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-              {nocRequestStatus.finalStatus === "Rejected" && (
-                <p style={{ color: 'red' }}>Your NOC request has been rejected by one or more faculty members. Please contact the college administration for further details.</p>
-              )}
-              {nocRequestStatus.finalStatus === "Partially Rejected" && (
-                <div>
-                  <p style={{ color: 'orange', fontWeight: 'bold' }}>⚠️ Your NOC request has been partially rejected.</p>
-                  <p style={{ color: 'blue' }}>You can resend your request to the faculty members who rejected or are still pending. Please check the NOC section below to resend.</p>
-                </div>
-              )}
-              {nocRequestStatus.finalStatus === "Pending" && (
-                <p style={{ color: 'orange' }}>Your NOC request is pending review by faculty members. Please check back later for updates.</p>
-              )}
-            </div>
-          ) : hasSentRequest ?(
-            <p style={{textAlign:"center"}}>You have already sent an NOC request.</p>
-          ) : (
-            <form onSubmit={adduser}>
-              <div className="form-group">
-                <label htmlFor="rollNo">Roll No.:</label>
-                <input
-                  type="text"
-                  id="rollNo"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                  required
-                />
+        {/* Only show the two buttons */}
+        <div className="form-container service-buttons">
+          <h2>Student Services</h2>
+          <div className="button-container">
+            <button 
+              onClick={() => navigate('/bonafide-form')}
+              className="service-button bonafide-button"
+            >
+              Apply for Bonafide
+            </button>
+            
+            <button 
+              onClick={() => setShowNocSection(true)}
+              className="service-button noc-button"
+            >
+              Apply for NOC
+            </button>
+          </div>
+        </div>
+
+        {/* Only show NOC section when the button is clicked */}
+        {showNocSection && (
+          <div className="form-container">
+            <h2>NOC Request Form</h2>
+            {hasSentRequest && nocRequestStatus && nocRequestStatus.finalStatus !== "Accepted" ? (
+              <div>
+                <p>You have an active NOC request.</p>
+                <p><strong>Final Status:</strong> {nocRequestStatus.finalStatus}</p>
+                {nocRequestStatus.facultyStatuses && (
+                  <div>
+                    <h4>Individual Faculty Statuses:</h4>
+                    <ul>
+                      {Object.entries(nocRequestStatus.facultyStatuses).map(([email, status]) => {
+                        const facultyRoleMap = {
+                          [exportedMentor]: "Mentor", // Add mentor mapping
+                          [examBranchEmail]: "Examination Branch",
+                          [libraryEmail]: "Library",
+                          [tnpEmail]: "Training & Placement Cell",
+                          [ieeeEmail]: "IEEE / ISTE / CSI",
+                          [sportsEmail]: "Sports / Games",
+                          [alumniEmail]: "Alumni Association",
+                        };
+                        const role = facultyRoleMap[email] || `Unknown Faculty (${email})`;
+                        return (
+                          <li key={email}>{role}: {status}</li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+                {nocRequestStatus.finalStatus === "Rejected" && (
+                  <p style={{ color: 'red' }}>Your NOC request has been rejected by one or more faculty members. Please contact the college administration for further details.</p>
+                )}
+                {nocRequestStatus.finalStatus === "Partially Rejected" && (
+                  <div>
+                    <p style={{ color: 'orange', fontWeight: 'bold' }}>⚠️ Your NOC request has been partially rejected.</p>
+                    <p style={{ color: 'blue' }}>You can resend your request to the faculty members who rejected or are still pending. Please check the NOC section below to resend.</p>
+                  </div>
+                )}
+                {nocRequestStatus.finalStatus === "Pending" && (
+                  <p style={{ color: 'orange' }}>Your NOC request is pending review by faculty members. Please check back later for updates.</p>
+                )}
               </div>
-              <div className="form-group">
-                <label htmlFor="studentName">Name:</label>
-                <input
-                  type="text"
-                  id="studentName"
-                  value={studentName}
-                  onChange={(e) => setStudentName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="branch">Branch:</label>
-                <select
-                  id="branch"
-                  value={branch}
-                  onChange={(e) => setBranch(e.target.value)}
-                  required
-                >
-                  <option value="">Select Branch</option>
-                  <option value="CSE">CSE</option>
-                  <option value="CSD">CSD</option>
-                  <option value="CSM">CSM</option>
-                  <option value="CSC">CSC</option>
-                  <option value="ECE">ECE</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="year">Year:</label>
-                <select
-                  id="year"
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  required
-                >
-                  <option value="">Select Year</option>
-                  <option value="I">I</option>
-                  <option value="II">II</option>
-                  <option value="III">III</option>
-                  <option value="IV">IV</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="purpose">Purpose of NOC:</label>
-                <textarea
-                  id="purpose"
-                  rows="4"
-                  value={purpose}
-                  onChange={(e) => setPurpose(e.target.value)}
-                  required
-                ></textarea>
-              </div>
-              <div className="form-group">
-                <label htmlFor="mentor">Mentor:</label>
-                <input
-                    type="email"
-                    id="mentor"
-                    placeholder="Mentor's Email"
-                    value={mentor}
-                    onChange={(e) => setMentor(e.target.value)}
+            ) : hasSentRequest ?(
+              <p style={{textAlign:"center"}}>You have already sent an NOC request.</p>
+            ) : (
+              <form onSubmit={adduser}>
+                <div className="form-group">
+                  <label htmlFor="rollNo">Roll No.:</label>
+                  <input
+                    type="text"
+                    id="rollNo"
+                    value={rollNo}
+                    onChange={(e) => setRollNo(e.target.value)}
                     required
                   />
-              </div>
-              <button type="submit" className="submit-button">Submit Request</button>
-            </form>
-          )}
-        </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="studentName">Name:</label>
+                  <input
+                    type="text"
+                    id="studentName"
+                    value={studentName}
+                    onChange={(e) => setStudentName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="branch">Branch:</label>
+                  <select
+                    id="branch"
+                    value={branch}
+                    onChange={(e) => setBranch(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Branch</option>
+                    <option value="CSE">CSE</option>
+                    <option value="CSD">CSD</option>
+                    <option value="CSM">CSM</option>
+                    <option value="CSC">CSC</option>
+                    <option value="ECE">ECE</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="year">Year:</label>
+                  <select
+                    id="year"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
+                    required
+                  >
+                    <option value="">Select Year</option>
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="purpose">Purpose of NOC:</label>
+                  <textarea
+                    id="purpose"
+                    rows="4"
+                    value={purpose}
+                    onChange={(e) => setPurpose(e.target.value)}
+                    required
+                  ></textarea>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="mentor">Mentor:</label>
+                  <input
+                      type="email"
+                      id="mentor"
+                      placeholder="Mentor's Email"
+                      value={mentor}
+                      onChange={(e) => setMentor(e.target.value)}
+                      required
+                    />
+                </div>
+                <button type="submit" className="submit-button">Submit Request</button>
+              </form>
+            )}
+          </div>
+        )}
 
-        {nocRequestStatus && nocRequestStatus.finalStatus === "Accepted" ? (
+        {showNocSection && nocRequestStatus && nocRequestStatus.finalStatus === "Accepted" ? (
           <div className="form-container">
             <h2>No Dues Certificate Issued</h2>
             <p style={{textAlign:"center"}}>Your No Dues Certificate has been successfully issued.</p>
             <p style={{textAlign:"center"}}>Please download the certificate by contacting the NOC Admin.</p>
             <p style={{textAlign:"center"}}>Thank you for using our service  :-)</p>
-            <button onClick={handleLogout} className="logout-button">Logout</button>
           </div>
-        ) : (
+        ) : showNocSection && (
           <div className="form-container">
             <Noc />
-            {/* <button onClick={handleLogout} className="logout-button">Logout</button> */}
           </div>
         )}
       </div>

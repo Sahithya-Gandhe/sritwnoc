@@ -3,18 +3,81 @@ import { useNavigate } from 'react-router-dom';
 // import { auth } from '../firebaseconfig'; // Assuming you have auth exported from firebaseconfig
 
 import './AdminDashboard.css'; // Import the new CSS file
+import './AdminDashboardBonafide.css'; // Import the bonafide CSS file
+import './AdminDashboardStudent.css'; // Import the student requests CSS file
 
-import { collection, addDoc, getDocs, updateDoc, doc, query, where, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, updateDoc, doc, query, where, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseconfig'; // Assuming you have db exported from firebaseconfig
+import BonafidePdf from './BonafidePdf';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
+// ... existing code ...
+
+const downloadBonafideCertificate = async (request) => {
+  const docRef = doc(db, 'bonafideRequests', request.id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+
+    // Render the BonafidePdf component to a canvas
+    const pdfComponent = document.createElement('div');
+    pdfComponent.innerHTML = `
+      <div className="bonafide-container">
+        <div className="bonafide-header">
+          <img src="${logo}" alt="College Logo" className="college-logo" />
+          <h2>SUMATHI REDDY INSTITUTE OF TECHNOLOGY FOR WOMEN</h2>
+          <p>Ananthasagar, Warangal - 506 371</p>
+          <h3>BONAFIDE / CONDUCT CERTIFICATE</h3>
+        </div>
+        <div className="bonafide-details">
+          <p>Date: ${new Date().toLocaleDateString('en-GB')}</p>
+          <p>
+            This is to Certify that Ms. <b>${data.studentName}</b>, D/O <b>${data.dob}</b>,
+            was a bonafide student of this college during the academic year <b>${data.academicYear}</b> and studied <b>${data.course}</b>.
+          </p>
+          <p>
+            His/Her Roll No: <b>${data.rollNo}</b> & Admin. No: <b>${data.adminNo}</b>
+          </p>
+          <p>
+            His/Her Conduct is: <b>${data.conduct}</b>
+          </p>
+        </div>
+        <div className="bonafide-signatures">
+          <div className="signature-block">
+            <p>PRINCIPAL</p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const canvas = await html2canvas(pdfComponent);
+    const imgData = canvas.toDataURL('image/png');
+
+    // Create a new jsPDF instance and add the image
+    const pdf = new jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`bonafide_certificate_${data.rollNo}.pdf`);
+  } else {
+    console.log("No such document!");
+  }
+};
+
+// ... existing code ...
 const AdminDashboard = () => {
 
-  const [activeSection, setActiveSection] = useState('faculty'); // 'faculty' or 'studentRequests'
+  const [activeSection, setActiveSection] = useState('faculty'); // 'faculty', 'studentRequests', or 'bonafideRequests'
   const [facultyRoll, setFacultyRoll] = useState('');
   const [facultyEmail, setFacultyEmail] = useState('');
   const [facultyList, setFacultyList] = useState([]);
   const [editingFaculty, setEditingFaculty] = useState(null); // To store faculty being edited
   const [nocRequests, setNocRequests] = useState([]); // New state for NOC requests
+  const [bonafideRequests, setBonafideRequests] = useState([]); // New state for Bonafide requests
   const navigate = useNavigate();
 
   const handleAddFaculty = useCallback(async () => {
@@ -81,6 +144,23 @@ const AdminDashboard = () => {
     }
   }, []);
 
+  const fetchBonafideRequests = useCallback(async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'bonafideRequests'));
+      const requestsData = [];
+      querySnapshot.forEach((doc) => {
+        requestsData.push({ 
+          id: doc.id,
+          ...doc.data() 
+        });
+      });
+      setBonafideRequests(requestsData);
+    } catch (error) {
+      console.error('Error fetching Bonafide requests:', error);
+      alert('Error fetching Bonafide requests: ' + error.message);
+    }
+  }, []);
+
   const handleEditClick = useCallback((faculty) => {
     setEditingFaculty(faculty);
     setFacultyRoll(faculty.roll ? String(faculty.roll) : ''); // Ensure it's a string, default to empty
@@ -134,19 +214,69 @@ const AdminDashboard = () => {
     }
   }, [handleDisplayFaculty]);
 
-  // Effect to fetch NOC requests when the studentRequests section is active
+  // Effect to fetch requests when sections are active
   useEffect(() => {
     if (activeSection === 'studentRequests') {
       fetchNocRequests();
+    } else if (activeSection === 'bonafideRequests') {
+      fetchBonafideRequests();
     }
-  }, [activeSection]);
+  }, [activeSection, fetchNocRequests, fetchBonafideRequests]);
+
+  // Function to download bonafide certificate (dummy implementation)
+  const downloadBonafideCertificate = async (request) => {
+    // Create a container for rendering the BonafidePdf component
+    const container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.left = '-9999px';
+    document.body.appendChild(container);
+
+    // Render BonafidePdf into the container
+    const { createRoot } = await import('react-dom/client');
+    const root = createRoot(container);
+    const ref = React.createRef();
+    root.render(
+      <BonafidePdf
+        ref={ref}
+        studentName={request.studentName}
+        fatherName={request.fatherName || request.dob || ''}
+        academicYear={request.academicYear || ''}
+        course={request.course || request.branch || ''}
+        rollNo={request.rollNo}
+        adminNo={request.adminNo || ''}
+        conduct={request.conduct || ''}
+      />
+    );
+
+    // Wait for the component to render
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Use html2canvas to capture the rendered component
+    const html2canvas = (await import('html2canvas')).default;
+    const jsPDF = (await import('jspdf')).default;
+    const element = ref.current || container.firstChild;
+    const canvas = await html2canvas(element);
+    const imgData = canvas.toDataURL('image/png');
+
+    // Create PDF
+    const pdf = new jsPDF();
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`bonafide_certificate_${request.rollNo}.pdf`);
+
+    // Clean up
+    root.unmount();
+    document.body.removeChild(container);
+  };
 
   return (
     <div className="admin-dashboard-container">
       <div className="admin-dashboard-content">
         <div className="dashboard-header">
           <h1>Admin Dashboard</h1>
-          <p className="dashboard-subtitle">Manage faculty and student NOC requests efficiently</p>
+          <p className="dashboard-subtitle">Manage faculty and student requests efficiently</p>
         </div>
         <div className="section-switcher">
           <button
@@ -160,6 +290,12 @@ const AdminDashboard = () => {
             onClick={() => setActiveSection('studentRequests')}
           >
             Manage Student Requests
+          </button>
+          <button
+            className={`switcher-button ${activeSection === 'bonafideRequests' ? 'active' : ''}`}
+            onClick={() => setActiveSection('bonafideRequests')}
+          >
+            Manage Bonafide
           </button>
         </div>
 
@@ -226,8 +362,8 @@ const AdminDashboard = () => {
               <div className="student-requests-display">
                 <h3>Student NOC Requests</h3>
                 {nocRequests.length > 0 ? (
-                  <div className="table-container">
-                    <table>
+                  <div className="student-table-container">
+                    <table className="student-table">
                       <thead>
                         <tr>
                           <th>Student Roll</th>
@@ -245,10 +381,15 @@ const AdminDashboard = () => {
                             <td>{request.studentName}</td>
                             <td>{request.branch}</td>
                             <td>{request.year || 'N/A'}</td>
-                            <td>{request.finalStatus}</td>
                             <td>
-                            {request.finalStatus === 'Accepted' && (
+                              <span className={`status-badge status-${request.finalStatus ? request.finalStatus.toLowerCase().replace(' ', '-') : 'pending'}`}>
+                                {request.finalStatus || 'Pending'}
+                              </span>
+                            </td>
+                            <td>
+                              {request.finalStatus === 'Accepted' && (
                                 <button
+                                  className="generate-noc-btn"
                                   onClick={() =>
                                     navigate('/generate-noc', {
                                       state: {
@@ -265,8 +406,6 @@ const AdminDashboard = () => {
                                   Generate NOC
                                 </button>
                               )}
-                  
-
                             </td>
                           </tr>
                         ))}
@@ -274,7 +413,62 @@ const AdminDashboard = () => {
                     </table>
                   </div>
                 ) : (
-                  <p>No student NOC requests to display.</p>
+                  <div className="no-requests">
+                    <p>No student NOC requests to display.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeSection === 'bonafideRequests' && (
+            <div className="bonafide-requests-management">
+              <h2>Manage Bonafide Requests</h2>
+              <p>Here you can view and manage student Bonafide requests.</p>
+              <div className="bonafide-requests-display">
+                <h3>Student Bonafide Requests</h3>
+                {bonafideRequests.length > 0 ? (
+                  <div className="bonafide-table-container">
+                    <table className="bonafide-table">
+                      <thead>
+                        <tr>
+                          <th>Student Roll</th>
+                          <th>Student Name</th>
+                          <th>Branch</th>
+                          <th>Year</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {bonafideRequests.map((request) => (
+                          <tr key={request.id}>
+                            <td>{request.rollNo}</td>
+                            <td>{request.studentName}</td>
+                            <td>{request.branch}</td>
+                            <td>{request.year}</td>
+                            <td>
+                              <span className={request.status === 'Generated' ? 'status-generated' : 'status-pending'}>
+                                {request.status}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                className="download-btn"
+                                onClick={() => downloadBonafideCertificate(request)}
+                              >
+                                Download Certificate
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="no-requests">
+                    <p>No student Bonafide requests to display.</p>
+                  </div>
                 )}
               </div>
             </div>

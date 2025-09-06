@@ -1,0 +1,155 @@
+/* AdminDashboardStudent.css */
+
+.student-requests-management {
+  padding: 20px;
+}
+
+.student-requests-management h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.student-requests-management p {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.student-requests-display {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.student-requests-display h3 {
+  color: #495057;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.student-table-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-overflow-scrolling: touch;
+}
+
+.student-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 0;
+  min-width: 700px;
+}
+
+.student-table th,
+.student-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.student-table th {
+  background-color: #e9ecef;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.student-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.student-table tr:last-child td {
+  border-bottom: none;
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-accepted {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-partially-rejected {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.generate-noc-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.generate-noc-btn:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.generate-noc-btn:active {
+  transform: translateY(0);
+}
+
+.no-requests {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+  font-size: 18px;
+}
+
+.no-requests p {
+  margin: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .student-table {
+    font-size: 14px;
+  }
+  
+  .student-table th,
+  .student-table td {
+    padding: 8px 10px;
+  }
+  
+  .generate-noc-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  /* Horizontal scroll for tables on mobile */
+  .student-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

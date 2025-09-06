@@ -57,8 +57,8 @@
 }
 
 .college-logo {
-  width: 80px;
-  height: 80px;
+  width: 200px;
+  height: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   /* transition: all 0.3s ease; */
@@ -285,8 +285,8 @@
   }
 
   .college-logo {
-    width: 50px;
-    height: 50px;
+    width: 200px;
+    height: auto;
   }
 
   .hamburger {

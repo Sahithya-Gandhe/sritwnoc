@@ -1,0 +1,134 @@
+.certificate-container {
+  width: 760px;
+  background: #ffffff;
+  border: 9px double #1e9fbf;
+  padding: 26px 28px 34px 28px;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Georgia", "Times New Roman", serif;
+  color: #0b2330;
+  margin: auto;
+}
+
+/* Header */
+.certificate-header {
+  text-align: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.certificate-logo {
+  width: 72px;
+  height: 72px;
+  position: absolute;
+  align-self: center;
+  top: -10px;
+  left: 20px;
+}
+
+.certificate-header h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #1e9fbf;
+  font-weight: 800;
+}
+
+.certificate-address {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #235b6a;
+}
+
+/* Certificate No and Date */
+.certificate-no-date {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.certificate-no-date .certificate-field {
+  display: inline-block;
+  border-bottom: 2px dotted rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 0 4px;
+}
+
+/* Title */
+
+/* Body */
+.certificate-body {
+  padding: 6px 20px;
+  font-size: 15px;
+  color: #184f56;
+}
+
+.certificate-line {
+  margin: 14px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.certificate-line .label {
+  font-weight: normal;
+  min-width: 120px;
+}
+
+.certificate-field {
+  flex-grow: 1;
+  border-bottom: 2px dotted rgba(0, 0, 0, 0.2);
+  min-width: 120px;
+  text-align: center;
+  padding: 0 4px;
+  font-weight: bold;
+}
+
+/* Signature */
+.certificate-signature {
+  font-size: 15px;
+  color: #1e9fbf;
+  font-weight: bold;
+  text-align: right;
+  margin-top: 40px;
+  padding-right: 20px;
+}
+
+/* Print Styling */
+@media print {
+  body {
+    background: #fff;
+  }
+  .certificate-container {
+    box-shadow: none;
+    border: 8px double #1e9fbf;
+    width: 100%;
+    max-width: 800px;
+  }
+}
+/* Adjust logo to be centered at the top */
+.certificate-logo {
+  width: 250px;
+  height: auto;
+  position: static; /* remove absolute positioning */
+  margin: 0 auto 10px auto; /* center horizontally with margin below */
+  display: block;
+}
+
+/* Title already centered, but ensuring text-align center */
+.certificate-title {
+  text-align: center;
+  margin: 15px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #1e9fbf;
+  /* border: 2px solid #1e9fbf; */
+  /* display: inline-block; */
+  padding: 6px 18px;
+  margin-left: auto;
+  margin-right: auto;
+}

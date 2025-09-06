@@ -12,6 +12,8 @@ const StudentDashboard = lazy(() => import('./components/StudentDashboard'));
 const AdminDashboard = lazy(() => import('./components/AdminDashboard'));
 const AdminLogin = lazy(() => import('./components/AdminLogin'));
 const NocGenerator = lazy(() => import('./components/NocGenerator'));
+const BonafideForm = lazy(() => import('./components/BonafideForm'));
+const BonafideGenerator = lazy(() => import('./components/BonafideGenerator'));
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,7 +32,7 @@ function App() {
         }
       } else {
         // If user logs out AND they are not on admin or NOC generation pages, go to home
-        if (!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/generate-noc')) {
+        if (!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/generate-noc') && !location.pathname.startsWith('/generate-bonafide')) {
           navigate('/');
         }
       }
@@ -54,12 +56,19 @@ function App() {
 
             {/* Student routes */}
             <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route path="/bonafide-form" element={<BonafideForm />} />
             <Route path="/generate-noc" element={<NocGenerator />} />
 
             {/* Admin protected route */}
             <Route
               path="/admin-dashboard"
               element={isAdminLoggedIn ? <AdminDashboard /> : <AdminLogin setIsAdminLoggedIn={setIsAdminLoggedIn} />}
+            />
+            
+            {/* Bonafide Generator route */}
+            <Route
+              path="/generate-bonafide"
+              element={isAdminLoggedIn ? <BonafideGenerator /> : <AdminLogin setIsAdminLoggedIn={setIsAdminLoggedIn} />}
             />
           </Routes>
         </Suspense>
